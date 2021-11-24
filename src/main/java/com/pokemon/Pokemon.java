@@ -21,10 +21,6 @@ public class Pokemon {
         this.attacks = attacks;
         this.type = type;
         this.weaknesses = weaknesses;
-
-        if (this.lv >= 30) {
-            this.ready = true;
-        }
         pokemons++;
     }
 
