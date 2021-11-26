@@ -3,12 +3,11 @@ package com.pokemon;
 public class Attack {
     private static int attacks = 1;
 
-    private enum Type {Normal, Fire, Water, Earth};
-
     public String name;
     public Type type;
     public char damage;
-    public char ap;
+    public char max_ap;
+    public char current_ap;
     public char accuracy;
     
     private boolean ko = false;
@@ -17,7 +16,7 @@ public class Attack {
         this.name = name;
         this.type = Type.Normal;
         this.damage = 80;
-        this.ap = 25;
+        this.max_ap = 25;
         this.accuracy = 95;
         attacks++;
     }
@@ -26,7 +25,7 @@ public class Attack {
         this.name = name;
         this.type = type;
         this.damage = damage;
-        this.ap = ap;
+        this.max_ap = ap;
         this.accuracy = accuracy;
         attacks++;
     }
@@ -35,9 +34,9 @@ public class Attack {
         this.name = name;
         this.type = type;
         this.damage = damage;
-        this.ap = ap;
+        this.max_ap = ap;
         this.accuracy = accuracy;
         this.ko = ko;
         attacks++;
-    }  
+    }
 }

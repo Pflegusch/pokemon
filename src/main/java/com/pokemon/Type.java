@@ -1,5 +1,5 @@
 package com.pokemon;
 
-public class Type {
-    
+public enum Type {
+    Normal, Fire, Water, Earth, Ground;
 }

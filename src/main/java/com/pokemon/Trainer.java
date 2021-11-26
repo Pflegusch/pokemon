@@ -6,12 +6,19 @@ public class Trainer {
     public Pokemon[] pokemons = new Pokemon[6];
     public String name;
     public boolean ready = true;
-    public Uint balance = new Uint(0);
+    public Uint balance;
 
     private int id = trainers;
 
     Trainer(String name) {
         this.name = name;
+        this.balance = new Uint(1000);
+        trainers++;
+    }
+
+    Trainer(String name, Uint balance) {
+        this.name = name; 
+        this.balance = balance;
         trainers++;
     }
 
@@ -21,5 +28,14 @@ public class Trainer {
         } else {
             balance.substract(cash);
         }
+    }
+
+    public boolean check_if_done() {
+        for (Pokemon pokemon : pokemons) {
+            if (pokemon.hp != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
