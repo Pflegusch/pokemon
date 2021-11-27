@@ -3,3 +3,5 @@ target/
 .classpath
 .project
 src/main/java/com/pokemon/*.class
+.vscode/
+lib/
