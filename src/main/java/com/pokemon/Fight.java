@@ -50,6 +50,20 @@ public class Fight {
         this.defender = tmp;
     }
 
+    private int get_input() {
+        int ret;
+        while (true) {
+            String input = System.console().readLine();
+            ret = Integer.parseInt(input);
+            if (ret < 1 || ret > 4) {
+                System.out.println("Please choose an attack between 1 and 4!");
+            } else {
+                break;
+            }
+        }
+        return ret;
+    }
+
     public void attack() {
         while (true) {
             if (this.is_over) {
@@ -60,8 +74,8 @@ public class Fight {
             show_status(this.attacker.pokemons[0]);
             show_attacks(this.attacker.pokemons[0]);
 
-            String n = System.console().readLine();
-            Attack attack = this.attacker.pokemons[0].attacks[Integer.parseInt(n) - 1];
+            int choice = get_input();
+            Attack attack = this.attacker.pokemons[0].attacks[choice - 1];
             System.out.println(String.format("User choose attack %s", attack.name));
 
             System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
