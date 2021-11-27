@@ -9,7 +9,7 @@ public class App
     public static void main(String[] args)
     {
         Attack[] glurakAttacks = new Attack[4];
-        glurakAttacks[0] = new Attack("Firestorm", Type.Fire, (char)120, (char)15, (char)90);
+        glurakAttacks[0] = new Attack("Firestorm", Type.Fire, (char)100, (char)15, (char)90);
         glurakAttacks[1] = new Attack("Earthquake", Type.Ground, (char)100, (char)15, (char)100);
         glurakAttacks[2] = new Attack("Flamethrower", Type.Fire, (char)120, (char)15, (char)85);
         glurakAttacks[3] = new Attack("Heatwave", Type.Fire, (char)80, (char)30, (char)95);
@@ -26,10 +26,10 @@ public class App
         );
 
         Attack[] glumandaAttacks = new Attack[4];
-        glumandaAttacks[0] = new Attack("Firestorm", Type.Fire, (char)120, (char)15, (char)90);
-        glumandaAttacks[1] = new Attack("Earthquake", Type.Ground, (char)100, (char)15, (char)100);
-        glumandaAttacks[2] = new Attack("Flamethrower", Type.Fire, (char)120, (char)15, (char)85);
-        glumandaAttacks[3] = new Attack("Heatwave", Type.Fire, (char)80, (char)30, (char)95);
+        glumandaAttacks[0] = new Attack("Blaze Kick", Type.Fire, (char)100, (char)15, (char)90);
+        glumandaAttacks[1] = new Attack("Blast Burn", Type.Fire, (char)100, (char)15, (char)100);
+        glumandaAttacks[2] = new Attack("Fire Blast", Type.Fire, (char)120, (char)15, (char)85);
+        glumandaAttacks[3] = new Attack("Thunder", Type.Electric, (char)80, (char)30, (char)95);
         final Type[] glumandaType = {Type.Fire, Type.Earth};
         final Type[] gluamandaWeaknesses = {Type.Water};
         Pokemon glumanda = new Pokemon(

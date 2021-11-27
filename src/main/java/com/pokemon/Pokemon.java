@@ -12,10 +12,10 @@ public class Pokemon {
     public Attack[] attacks = new Attack[4];
     public Type[] type = new Type[2];
     public Type[] weaknesses = new Type[2];
+    public boolean alive = true;
 
     private int id = pokemons;
     private int current_exp = 0;
-    private boolean ready = false;
 
     Pokemon(int hp, int lv, int speed, String name, Attack[] attacks, Type[] type, Type[] weaknesses) {
         this.hp = hp;
@@ -32,7 +32,12 @@ public class Pokemon {
         Random random = new Random();
         int accuracy_range = random.nextInt(100);
         if (100 - attack.accuracy < accuracy_range) {
-            other.hp -= attack.damage;
+            if ((other.hp - attack.damage) <= 0) {
+                other.hp = 0;
+                this.alive = false;
+            } else {
+                 other.hp -= attack.damage;
+            } 
             attack.current_ap--;
         } else {
             attack.current_ap--;
@@ -46,9 +51,4 @@ public class Pokemon {
     public int get_id() {
         return this.id;
     }
-
-    public boolean is_ready() {
-        return this.ready;
-    }
-
 }

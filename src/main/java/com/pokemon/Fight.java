@@ -11,6 +11,7 @@ public class Fight {
 
     private int id = fights;
     private int rounds = 0;
+    private boolean is_over = false;
     public Trainer attacker;
     public Trainer defender;
 
@@ -38,18 +39,37 @@ public class Fight {
         System.out.println("---------------------------------");
     }
 
+    private void swap_attackers() {
+        Trainer tmp = this.attacker;
+        this.attacker = this.defender;
+        this.defender = tmp;
+    }
+
     public void attack() {
-        System.out.println(String.format("It's %s turn! Choose an attack:", attacker.name));
-        show_attacks(this.attacker.pokemons[0]);
+        while (true) {
+            if (this.is_over) {
+                break;
+            }
 
-        Scanner reader = new Scanner(System.in);
-        int n = reader.nextInt();
-        Attack attack = this.attacker.pokemons[0].attacks[n - 1];
-        System.out.println(String.format("User choose attack %s", attack.name));
-        reader.close();
+            System.out.println(String.format("It's %s turn! Choose an attack:", attacker.name));
+            show_attacks(this.attacker.pokemons[0]);
 
-        System.out.println(this.defender.pokemons[0].hp);
-        this.attacker.pokemons[0].attack(attack, this.defender.pokemons[0]);
-        System.out.println(this.defender.pokemons[0].hp);
+            String n = System.console().readLine();
+            Attack attack = this.attacker.pokemons[0].attacks[Integer.parseInt(n) - 1];
+            System.out.println(String.format("User choose attack %s", attack.name));
+
+            System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
+            this.attacker.pokemons[0].attack(attack, this.defender.pokemons[0]);
+            System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
+            
+            for (Trainer trainer : trainers) {
+                if (trainer.check_if_done()) {
+                    this.is_over = true;
+                    System.out.println(String.format("Trainer %s lost", trainer.name));
+                }
+            }
+            swap_attackers();
+            this.rounds++;      
+        }
     }
 }
