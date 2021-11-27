@@ -9,14 +9,14 @@ public class App
     public static void main(String[] args)
     {
         Attack[] glurakAttacks = new Attack[4];
-        glurakAttacks[0] = new Attack("Firestorm", Type.Fire, (char)100, (char)15, (char)90);
-        glurakAttacks[1] = new Attack("Earthquake", Type.Ground, (char)100, (char)15, (char)100);
-        glurakAttacks[2] = new Attack("Flamethrower", Type.Fire, (char)120, (char)15, (char)85);
-        glurakAttacks[3] = new Attack("Heatwave", Type.Fire, (char)80, (char)30, (char)95);
+        glurakAttacks[0] = new Attack("Firestorm", Type.Fire, 60, 15, 80);
+        glurakAttacks[1] = new Attack("Earthquake", Type.Ground, 60, 15, 100);
+        glurakAttacks[2] = new Attack("Flamethrower", Type.Fire, 75, 15, 85);
+        glurakAttacks[3] = new Attack("Heatwave", Type.Fire, 80, 30, 95);
         final Type[] glurakType = {Type.Earth, Type.Fire};
         final Type[] glurakWeaknesses = {Type.Water};
         Pokemon glurak = new Pokemon(
-            260, 
+            360, 
             80,
             125,
             "Glurak",
@@ -26,15 +26,15 @@ public class App
         );
 
         Attack[] glumandaAttacks = new Attack[4];
-        glumandaAttacks[0] = new Attack("Blaze Kick", Type.Fire, (char)100, (char)15, (char)90);
-        glumandaAttacks[1] = new Attack("Blast Burn", Type.Fire, (char)100, (char)15, (char)100);
-        glumandaAttacks[2] = new Attack("Fire Blast", Type.Fire, (char)120, (char)15, (char)85);
-        glumandaAttacks[3] = new Attack("Thunder", Type.Electric, (char)80, (char)30, (char)95);
+        glumandaAttacks[0] = new Attack("Blaze Kick", Type.Fire, 60, 15, 80);
+        glumandaAttacks[1] = new Attack("Blast Burn", Type.Fire, 60, 15, 100);
+        glumandaAttacks[2] = new Attack("Fire Blast", Type.Fire, 75, 15, 85);
+        glumandaAttacks[3] = new Attack("Thunder", Type.Electric, 80, 30, 95);
         final Type[] glumandaType = {Type.Fire, Type.Earth};
         final Type[] gluamandaWeaknesses = {Type.Water};
         Pokemon glumanda = new Pokemon(
-            80, 
-            18,
+            290, 
+            70,
             180,
             "Glumanda",
             glumandaAttacks, 

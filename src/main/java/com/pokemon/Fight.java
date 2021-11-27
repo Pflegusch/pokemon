@@ -1,7 +1,5 @@
 package com.pokemon;
 
-import java.util.Scanner;
-
 public class Fight {
     private static int fights = 1;
 
@@ -39,8 +37,13 @@ public class Fight {
     }
 
     private void show_attacks(Pokemon pokemon) {
-        System.out.println(String.format("-- %s(1) --- %s(2) --", pokemon.attacks[0].name, pokemon.attacks[1].name));
-        System.out.println(String.format("-- %s(3) --- %s(4) --", pokemon.attacks[2].name, pokemon.attacks[3].name));
+        System.out.println(String.format("-- %s %s/%s(1) --- %s %s/%s(2) --", 
+            pokemon.attacks[0].name, pokemon.attacks[0].current_ap, pokemon.attacks[0].max_ap,
+            pokemon.attacks[1].name, pokemon.attacks[1].current_ap, pokemon.attacks[1].max_ap));
+    
+        System.out.println(String.format("-- %s %s/%s(3) --- %s %s/%s(4) --", 
+            pokemon.attacks[2].name, pokemon.attacks[2].current_ap, pokemon.attacks[2].max_ap,
+            pokemon.attacks[3].name, pokemon.attacks[3].current_ap, pokemon.attacks[3].max_ap));
         System.out.println("---------------------------------");
     }
 

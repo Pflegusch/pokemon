@@ -5,10 +5,10 @@ public class Attack {
 
     public String name;
     public Type type;
-    public char damage;
-    public char max_ap;
-    public char current_ap;
-    public char accuracy;
+    public int  damage;
+    public int max_ap;
+    public int current_ap;
+    public int accuracy;
     
     private boolean ko = false;
 
@@ -21,20 +21,22 @@ public class Attack {
         attacks++;
     }
 
-    Attack(String name, Type type, char damage, char ap, char accuracy) {
+    Attack(String name, Type type, int damage, int ap, int accuracy) {
         this.name = name;
         this.type = type;
         this.damage = damage;
         this.max_ap = ap;
+        this.current_ap = ap;
         this.accuracy = accuracy;
         attacks++;
     }
 
-    Attack(String name, Type type, char damage, char ap, char accuracy, boolean ko) {
+    Attack(String name, Type type, int damage, int ap, int accuracy, boolean ko) {
         this.name = name;
         this.type = type;
         this.damage = damage;
         this.max_ap = ap;
+        this.current_ap = ap;
         this.accuracy = accuracy;
         this.ko = ko;
         attacks++;
