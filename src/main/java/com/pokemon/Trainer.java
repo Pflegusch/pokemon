@@ -30,14 +30,13 @@ public class Trainer {
         }
     }
 
-    public boolean check_if_done() {
-        // for (Pokemon pokemon : pokemons) {
-        //     if (pokemon.hp > 0) {
-        //         return false;
-        //     }
-        // }
-        if (pokemons[0].hp > 0) {
-            return false;
+    public boolean check_if_done() { 
+        for (Pokemon pokemon : pokemons) {
+            if (pokemon != null) {
+                if (pokemon.hp > 0) {
+                    return false;
+                }
+            }
         }
         return true;
     }

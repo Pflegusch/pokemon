@@ -32,8 +32,13 @@ public class Fight {
         }
     }
 
-    private void show_attacks(Pokemon pokemon) {
+    private void show_status(Pokemon pokemon) {
         System.out.println("---------------------------------");
+        System.out.println(String.format("-- %s(Lv. %s) HP: %s --", pokemon.name, pokemon.lv, pokemon.hp));
+        System.out.println("---------------------------------");
+    }
+
+    private void show_attacks(Pokemon pokemon) {
         System.out.println(String.format("-- %s(1) --- %s(2) --", pokemon.attacks[0].name, pokemon.attacks[1].name));
         System.out.println(String.format("-- %s(3) --- %s(4) --", pokemon.attacks[2].name, pokemon.attacks[3].name));
         System.out.println("---------------------------------");
@@ -52,6 +57,7 @@ public class Fight {
             }
 
             System.out.println(String.format("It's %s turn! Choose an attack:", attacker.name));
+            show_status(this.attacker.pokemons[0]);
             show_attacks(this.attacker.pokemons[0]);
 
             String n = System.console().readLine();
