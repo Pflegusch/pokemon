@@ -114,17 +114,6 @@ public class Database {
         }
     }
 
-    public void get_table(String table) {
-        try {
-            String sql = String.format("SELECT * from %s", table);
-            Statement statement = this.connection.createStatement();
-            ResultSet set = statement.executeQuery(sql);
-            this.LAST_SQL_COMMAND = sql;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public String _LAST_SQL_COMMAND() {
         return this.LAST_SQL_COMMAND;
     }

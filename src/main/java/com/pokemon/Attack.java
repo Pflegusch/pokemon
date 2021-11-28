@@ -11,7 +11,6 @@ public class Attack {
     public int accuracy;
     
     public int id = attacks;
-    private boolean ko = false;
 
     Attack(String name) {
         this.name = name;
