@@ -1,21 +1,49 @@
 package com.pokemon;
 
-public class Fight {
-    private static int fights = 1;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "Fights")
+public class Fight {
+    private static int fights;
+
+    @Transient
     public Trainer[] trainers = new Trainer[2];
+
+    @Transient
     public Trainer winner;
+
+    @Transient
     public Trainer loser;
 
-    private int id = fights;
-    private int rounds = 0;
-    private boolean is_over = false;
+    public int price = 500;
+
+    @Id
+    public int id = fights;
+
+    public int rounds = 0;
+    public boolean running = true;
+
+    @Transient
     public Trainer attacker;
+    @Transient
     public Trainer defender;
 
-    Fight(Trainer trainer1, Trainer trainer2) {
+    Fight() {}
+
+    Fight(Trainer trainer1, Trainer trainer2, int top_id) {
         this.trainers[0] = trainer1;
         this.trainers[1] = trainer2;
+        this.id = top_id;
+        starter();
+        fights++;
+    }
+
+    Fight(Trainer trainer1, Trainer trainer2, int price, int top_id) {
+        this.trainers[0] = trainer1;
+        this.trainers[1] = trainer2;
+        this.price = price;
+        this.id = top_id;
         starter();
         fights++;
     }
@@ -67,9 +95,9 @@ public class Fight {
         return ret;
     }
 
-    public void attack() {
+    public void start() {
         while (true) {
-            if (this.is_over) {
+            if (!this.running) {
                 break;
             }
 
@@ -81,18 +109,23 @@ public class Fight {
             Attack attack = this.attacker.pokemons[0].attacks[choice - 1];
             System.out.println(String.format("User choose attack %s", attack.name));
 
-            System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
+            // System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
             this.attacker.pokemons[0].attack(attack, this.defender.pokemons[0]);
-            System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
+            // System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
             
+            swap_attackers();
+            this.rounds++;
+
             for (Trainer trainer : trainers) {
                 if (trainer.check_if_done()) {
-                    this.is_over = true;
+                    this.running = false;
+                    this.loser = trainer;
+                    this.winner = this.defender;
+                    // this.winner .update_balance(true, 500);
                     System.out.println(String.format("Trainer %s lost", trainer.name));
                 }
             }
-            swap_attackers();
-            this.rounds++;      
+                
         }
     }
 }

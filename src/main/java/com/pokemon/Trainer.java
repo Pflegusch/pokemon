@@ -1,22 +1,30 @@
 package com.pokemon;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Trainers")
 public class Trainer {
     private static int trainers = 1;
 
-    public Pokemon[] pokemons = new Pokemon[6];
-    public String name;
-    public boolean ready = true;
-    public Uint balance;
+    @Id
+    public int id = trainers;
 
-    private int id = trainers;
+    @Transient
+    public Pokemon[] pokemons = new Pokemon[6];
+
+    public String name;
+    public int balance;
+
+    Trainer() {}
 
     Trainer(String name) {
         this.name = name;
-        this.balance = new Uint(1000);
+        this.balance = 1000;
         trainers++;
     }
 
-    Trainer(String name, Uint balance) {
+    Trainer(String name, int balance) {
         this.name = name; 
         this.balance = balance;
         trainers++;
@@ -24,9 +32,13 @@ public class Trainer {
 
     public void update_balance(boolean has_won, int cash) {
         if (has_won) {
-            balance.add(cash);
+            balance += cash;
         } else {
-            balance.substract(cash);
+            if (balance - cash >= 0) {
+                this.balance -= cash;
+            } else {
+                this.balance = 0;
+            }
         }
     }
 
@@ -39,5 +51,13 @@ public class Trainer {
             }
         }
         return true;
+    }
+
+    public void heal_pokemons() {
+        for (Pokemon pokemon : pokemons) {
+            if (pokemon != null) {
+                pokemon.heal();
+            }      
+        }
     }
 }

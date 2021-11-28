@@ -1,24 +1,49 @@
 package com.pokemon;
 
 import java.util.Random;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "Pokedex")
 public class Pokemon {
     private static int pokemons = 1;
 
+    @Transient
     public int hp = 0;
+
+    @Transient
     public int lv = 0;
+
+    @Transient
     public int speed = 0;
+
     public String name;
+    @Transient
     public Attack[] attacks = new Attack[4];
+
+    @Transient
     public Type[] type = new Type[2];
+
+    @Transient
     public Type[] weaknesses = new Type[2];
+
+    @Transient
     public boolean alive = true;
 
-    private int id = pokemons;
+    @Id
+    public int id = pokemons;
+
+    @Transient
+    private int max_hp;
+
+    @Transient
     private int current_exp = 0;
+
+    Pokemon() {}
 
     Pokemon(int hp, int lv, int speed, String name, Attack[] attacks, Type[] type, Type[] weaknesses) {
         this.hp = hp;
+        this.max_hp = hp;
         this.lv = lv;
         this.speed = speed;
         this.name = name;
@@ -44,11 +69,7 @@ public class Pokemon {
         }
     }
 
-    public void add_exp(int exp) {
-        this.current_exp += exp;
-    }
-
-    public int get_id() {
-        return this.id;
+    public void heal() {
+        this.hp = max_hp;
     }
 }

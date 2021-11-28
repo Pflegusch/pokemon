@@ -5,11 +5,12 @@ public class Attack {
 
     public String name;
     public Type type;
-    public int  damage;
+    public int damage;
     public int max_ap;
     public int current_ap;
     public int accuracy;
     
+    public int id = attacks;
     private boolean ko = false;
 
     Attack(String name) {
