@@ -4,20 +4,20 @@ import java.util.Random;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Pokedex")
+@Table(name = "Pokemons")
 public class Pokemon {
-    private static int pokemons = 1;
+    private static int pokemons = 0;
+    
+    @Id
+    @Column(name = "pokemon_id")
+    public int id = pokemons;
 
-    @Transient
-    public int hp = 0;
-
-    @Transient
-    public int lv = 0;
-
-    @Transient
-    public int speed = 0;
+    public int hp;
+    public int lv;
+    public int speed;
 
     public String name;
+    
     @Transient
     public Attack[] attacks = new Attack[4];
 
@@ -30,20 +30,23 @@ public class Pokemon {
     @Transient
     public boolean alive = true;
 
-    @Id
-    public int id = pokemons;
-
     @Transient
-    private int max_hp;
-
-    @Transient
-    private int current_exp = 0;
+    public int current_hp;
 
     Pokemon() {}
 
+    Pokemon(int hp, int lv, int speed, String name) {
+        this.hp = hp;
+        this.current_hp = hp;
+        this.lv = lv;
+        this.speed = speed;
+        this.name = name;
+        pokemons++;
+    }
+
     Pokemon(int hp, int lv, int speed, String name, Attack[] attacks, Type[] type, Type[] weaknesses) {
         this.hp = hp;
-        this.max_hp = hp;
+        this.current_hp = hp;
         this.lv = lv;
         this.speed = speed;
         this.name = name;
@@ -57,11 +60,11 @@ public class Pokemon {
         Random random = new Random();
         int accuracy_range = random.nextInt(100);
         if (100 - attack.accuracy < accuracy_range) {
-            if ((other.hp - attack.damage) <= 0) {
-                other.hp = 0;
+            if ((other.current_hp - attack.damage) <= 0) {
+                other.current_hp = 0;
                 this.alive = false;
             } else {
-                 other.hp -= attack.damage;
+                 other.current_hp -= attack.damage;
             } 
             attack.current_ap--;
         } else {
@@ -70,6 +73,6 @@ public class Pokemon {
     }
 
     public void heal() {
-        this.hp = max_hp;
+        this.current_hp = hp;
     }
 }

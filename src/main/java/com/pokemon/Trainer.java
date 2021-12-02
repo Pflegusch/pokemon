@@ -5,9 +5,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Trainers")
 public class Trainer {
-    private static int trainers = 1;
+    private static int trainers = 0;
 
     @Id
+    @Column(name = "trainer_id")
     public int id = trainers;
 
     @Transient
@@ -45,7 +46,7 @@ public class Trainer {
     public boolean check_if_done() { 
         for (Pokemon pokemon : pokemons) {
             if (pokemon != null) {
-                if (pokemon.hp > 0) {
+                if (pokemon.current_hp > 0) {
                     return false;
                 }
             }

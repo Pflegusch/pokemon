@@ -1,66 +1,77 @@
 package com.pokemon;
 
-import java.sql.SQLException;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import java.util.logging.Level;
 
 public class App 
 {
     public static void main(String[] args)
     {
-        Attack[] glurakAttacks = new Attack[4];
-        glurakAttacks[0] = new Attack("Firestorm", Type.Fire, 120, 15, 80);
-        glurakAttacks[1] = new Attack("Earthquake", Type.Ground, 60, 15, 100);
-        glurakAttacks[2] = new Attack("Flamethrower", Type.Fire, 75, 15, 85);
-        glurakAttacks[3] = new Attack("Heatwave", Type.Fire, 80, 30, 95);
-        final Type[] glurakType = {Type.Fire, Type.Earth};
-        final Type[] glurakWeaknesses = {Type.Water};
-        Pokemon glurak = new Pokemon(
-            360, 
-            80,
-            125,
-            "Glurak",
-            glurakAttacks, 
-            glurakType, 
-            glurakWeaknesses
-        );
-
-        Attack[] glumandaAttacks = new Attack[4];
-        glumandaAttacks[0] = new Attack("Blaze Kick", Type.Fire, 110, 15, 80);
-        glumandaAttacks[1] = new Attack("Blast Burn", Type.Fire, 60, 15, 100);
-        glumandaAttacks[2] = new Attack("Fire Blast", Type.Fire, 75, 15, 85);
-        glumandaAttacks[3] = new Attack("Thunder", Type.Electric, 80, 30, 95);
-        final Type[] glumandaType = {Type.Fire, Type.Earth};
-        final Type[] gluamandaWeaknesses = {Type.Water};
-        Pokemon glumanda = new Pokemon(
-            290, 
-            70,
-            180,
-            "Glumanda",
-            glumandaAttacks, 
-            glumandaType, 
-            gluamandaWeaknesses
-        );
-
         Database database = new Database();
-        database.initialization();
 
-        int top_id = 0;
-        try {
-            top_id = database.get_top_id();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("mariadb");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-        Trainer ash = new Trainer("Ash", 5000);
-        ash.pokemons[0] = glurak;
-        Trainer barry = new Trainer("Barry", 5000);
+        database.set_entitymanager(em);
+        database.set_entitytransaction(tx);
+        database.initialize();
+        
+        // final Type[] glurakType = {Type.Fire, Type.Earth};
+        // final Type[] glurakWeaknesses = {Type.Water};
+        // Pokemon glurak = new Pokemon(
+        //     360, 
+        //     80,
+        //     125,
+        //     "Glurak"
+        // );
+        // glurak.attacks[0] = em.find(Attack.class, "Blast Burn");
+        // glurak.attacks[1] = em.find(Attack.class, "Blaze Kick");
+        // glurak.attacks[2] = em.find(Attack.class, "Earthquake");
+        // glurak.attacks[3] = em.find(Attack.class, "Fire Blast");
+        // glurak.type = glurakType;
+        // glurak.weaknesses = glurakWeaknesses;
+        // //database.insert_pokemon(glurak);
+
+        // final Type[] glumandaType = {Type.Fire, Type.Earth};
+        // final Type[] gluamandaWeaknesses = {Type.Water};
+        // Pokemon glumanda = new Pokemon(
+        //     290, 
+        //     70,
+        //     180,
+        //     "Glumanda"
+        // );
+        // glumanda.attacks[0] = em.find(Attack.class, "Fire Blast");
+        // glumanda.attacks[1] = em.find(Attack.class, "Heatwave");
+        // glumanda.attacks[2] = em.find(Attack.class, "Hyper Beam");
+        // glumanda.attacks[3] = em.find(Attack.class, "Blast Burn");
+        // glumanda.weaknesses = gluamandaWeaknesses;
+        // glumanda.type = glumandaType;
+        // //database.insert_pokemon(glumanda);
+
+        // // Trainer ash = new Trainer("Ash", 5000);
+        // // ash.pokemons[0] = glurak;
+        // // Trainer barry = new Trainer("Barry", 5000);
+        // // barry.pokemons[0] = glumanda;
+
+        Trainer ash = em.find(Trainer.class, 1);
+        Trainer barry = em.find(Trainer.class, 2);
+        
+        Pokemon glumanda = em.find(Pokemon.class, 1);
+        Pokemon groudon = em.find(Pokemon.class, 2);
+
+        ash.pokemons[0] = groudon;
         barry.pokemons[0] = glumanda;
 
-        Fight fight = new Fight(ash, barry, 250, top_id);
-        top_id++;
+        database.set_attacks(groudon);
+        database.set_attacks(glumanda);
+
+        Fight fight = new Fight(ash, barry, 250);
         fight.start();
         
         for (Trainer trainer : fight.trainers) {
@@ -69,19 +80,5 @@ public class App
 
         database.insert_fight(fight);
         database.update_trainers(fight);
-
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("mariadb");
-        EntityManager em = emf.createEntityManager();
-
-        Fight t = em.find(Fight.class, 0);
-        System.out.println("Trainer price: " + t.price);
-
-        // fight = new Fight(ash, barry, top_id);
-        // top_id++;
-        // fight.start();
-
-        // database.insert_fight(fight);
-        // database.update_trainers(fight);
-
     }
 }

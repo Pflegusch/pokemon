@@ -3,9 +3,11 @@ package com.pokemon;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 public class Database {
     private String DB_URL = "jdbc:mysql://172.17.0.1:3306/";
@@ -13,9 +15,11 @@ public class Database {
     private String USER = "eich";
     private String PASS = "eich12344";
 
-    private String LAST_SQL_COMMAND;
+    private EntityManager em;
+    private EntityTransaction tx;
+    private Connection connection;
 
-    public Connection connection;
+    private String LAST_SQL_COMMAND;
 
     Database() {
         try {
@@ -39,79 +43,112 @@ public class Database {
         }
     }
 
-    public void initialization() {
-        String sql;
-        Statement statement;
-        if (!table_exist("Trainers")) {
-            sql = "CREATE TABLE Trainers" +
-                "(id INTEGER not null, " +
-                "name VARCHAR(255) not null, " +
-                "balance INTEGER, " +
-                "PRIMARY KEY ( id ))";
-            try {
-                statement = this.connection.createStatement();
-                statement.executeUpdate(sql);
-                this.LAST_SQL_COMMAND = sql;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    Database(String DB_URL, String DB, String USER, String PASS, 
+            EntityManager em, EntityTransaction tx) {
+        this.DB_URL = DB_URL;
+        this.DB = DB;
+        this.USER = USER;
+        this.PASS = PASS;
+        this.em = em;
+        this.tx = tx;
+
+        try {
+            this.connection = DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    }
 
-        if (!table_exist("Pokedex")) {
-            sql = "CREATE TABLE Pokedex" +
-                "(id INTEGER not null, " +
-                "name VARCHAR(255) not null, " +
-                "type VARCHAR(255) not null, " +
-                "weakness VARCHAR(255) not null, " +
-                "PRIMARY KEY ( id ))";
+    public void set_entitymanager(EntityManager em) {
+        this.em = em;
+    }
 
-            try {
-                statement = this.connection.createStatement();
-                statement.executeUpdate(sql);
-                this.LAST_SQL_COMMAND = sql;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+    public void set_entitytransaction(EntityTransaction tx) {
+        this.tx = tx;
+    }
 
-        if (!table_exist("Fights")) {
-            sql = "CREATE TABLE Fights" +
-                "(id INTEGER not null, " +
-                "running BOOLEAN, " +
-                "rounds INTEGER DEFAULT null, " +
-                "winner INTEGER DEFAULT null, " +
-                "loser INTEGER DEFAULT null, " +
-                "price INTEGER DEFAULT null, " +
-                "trainers VARCHAR(255) not null, " + 
-                "PRIMARY KEY ( id ))";
+    public void initialize() {
+        if (!table_exist("Trainers")) initialize_trainers();
+        if (!table_exist("Attacks")) initialize_attacks();
+        if (!table_exist("Pokemons")) initialize_pokemons();
+        if (!table_exist("Fights")) initialize_fights();
+        
+    }
 
-            try {
-                statement = this.connection.createStatement();
-                statement.executeUpdate(sql);
-                this.LAST_SQL_COMMAND = sql;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+    private void initialize_trainers() {
+        String sql = "CREATE TABLE Trainers" +
+            "(trainer_id INTEGER AUTO_INCREMENT, " +
+            "name VARCHAR(255) not null, " +
+            "balance INTEGER, " +
+            "PRIMARY KEY ( trainer_id ))";
 
-        if (!table_exist("Attacks")) {
-            sql = "CREATE TABLE Attacks" +
-                "(id INTEGER not null, " +
-                "name VARCHAR(255) not null, " +
-                "type VARCHAR(255) not null, " +
-                "damage INTEGER DEFAULT null, " +
-                "ap INTEGER not null, " + 
-                "accuracy INTEGER not null, " +
-                "PRIMARY KEY ( id ))";
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
+    }
 
-            try {
-                statement = this.connection.createStatement();
-                statement.executeUpdate(sql);
-                this.LAST_SQL_COMMAND = sql;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+    private void initialize_pokemons() {
+        String sql = "CREATE TABLE Pokemons" +
+            "(pokemon_id INTEGER AUTO_INCREMENT, " +
+            "name VARCHAR(255) not null, " +
+            "lv INTEGER not null, " +
+            "hp INTEGER not null, " +
+            "speed INTEGER not null, " +
+            "type VARCHAR(255) not null, " +
+            "weakness VARCHAR(255) not null, " +
+            "attack_1 VARCHAR(255) not null, " + 
+            "attack_2 VARCHAR(255) not null, " + 
+            "attack_3 VARCHAR(255) not null, " + 
+            "attack_4 VARCHAR(255) not null, " + 
+            "FOREIGN KEY (attack_1) REFERENCES Attacks(name), " +
+            "FOREIGN KEY (attack_2) REFERENCES Attacks(name), " +
+            "FOREIGN KEY (attack_3) REFERENCES Attacks(name), " +
+            "FOREIGN KEY (attack_4) REFERENCES Attacks(name), " +
+            "PRIMARY KEY ( pokemon_id ))";
+
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
+    }
+
+    private void initialize_fights() {
+        String sql = "CREATE TABLE Fights" +
+            "(fight_id INTEGER AUTO_INCREMENT, " +
+            "rounds INTEGER DEFAULT null, " +
+            "price INTEGER DEFAULT null, " +
+            "winner INTEGER not null, " +
+            "loser INTEGER not null, " +
+            "created_at DATETIME, " +
+            "PRIMARY KEY ( fight_id ), " +
+            "FOREIGN KEY (winner) REFERENCES Trainers(trainer_id), " +
+            "FOREIGN KEY (loser) REFERENCES Trainers(trainer_id))";
+
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
+    }
+
+    private void initialize_attacks() {
+        String sql = "CREATE TABLE Attacks" +
+            "(name VARCHAR(255) not null, " +
+            "type VARCHAR(255) not null, " +
+            "damage INTEGER DEFAULT null, " +
+            "ap INTEGER not null, " + 
+            "accuracy INTEGER not null, " +
+            "ko BOOLEAN DEFAULT false, " +
+            "PRIMARY KEY ( name ))";
+
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
     }
 
     public String _LAST_SQL_COMMAND() {
@@ -135,137 +172,120 @@ public class Database {
     }
 
     public void insert_trainer(Trainer trainer) {
-        try {
-            String sql = String.format("INSERT INTO Trainers VALUES (%s, '%s', %s)",
-                    trainer.id, trainer.name, trainer.balance);
-            Statement statement = this.connection.createStatement();
-            statement.executeUpdate(sql);
-            this.LAST_SQL_COMMAND = sql;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } 
+        String sql = String.format("INSERT INTO Trainers VALUES (NULL, '%s', %s)",
+            trainer.name, trainer.balance);
+
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
     }
 
     public void insert_pokemon(Pokemon pokemon) {
-        int id = pokemon.id;
-        String name, types, weaknesses;
-        name = pokemon.name;
-        types = "";
-        weaknesses = "";
+        int lv = pokemon.lv;
+        String name = pokemon.name;
+        String types = "";
+        String weaknesses = "";
+
         for (Type type : pokemon.type) {
             types += type.toString() + ",";
         }
         types = types.substring(0, types.length() - 1);
-
+        
         for (Type type : pokemon.weaknesses) {
             weaknesses += type.toString() + ",";
         }
         weaknesses = weaknesses.substring(0, weaknesses.length() - 1);
 
-        try {
-            String sql = String.format("INSERT INTO Pokedex VALUES (%s, '%s', '%s', '%s')",
-                    id, name, types, weaknesses);
-            Statement statement = this.connection.createStatement();
-            statement.executeUpdate(sql);
-            this.LAST_SQL_COMMAND = sql;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String a1 = pokemon.attacks[0].name;
+        String a2 = pokemon.attacks[1].name;
+        String a3 = pokemon.attacks[2].name;
+        String a4 = pokemon.attacks[3].name;
+
+        String sql = String.format("INSERT INTO Pokemons VALUES " + 
+            "(NULL, '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s')",
+            name, lv, types, weaknesses, a1, a2, a3, a4);
+
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
     }
 
     public void insert_fight(Fight fight) {
-        int id = fight.id;
-        boolean running = fight.running;
         int rounds = fight.rounds;    
-        Trainer winner = fight.winner;
-        int winner_id;
-        Trainer loser = fight.loser;
+        int winner_id = fight.winner.id;
+        int loser_id = fight.loser.id;
         int price = fight.price;
-        int loser_id;
-        String trainers = "";
 
-        if (winner != null) {
-            winner_id = winner.id;
-        } else {
-            winner_id = -1;
-        }
-
-        if (loser != null) {
-            loser_id = loser.id;
-        } else {
-            loser_id = -1;
-        }
-
-        for (Trainer trainer : fight.trainers) {
-            trainers += trainer.name + ",";
-        }
-        trainers = trainers.substring(0, trainers.length() - 1);
-
-        System.out.println("DEBUG ID: " + id);
-
-        try {
-            String sql = String.format("INSERT INTO Fights VALUES (%s, %s, %s, %s, %s, %s, '%s')",
-                    id, running, rounds, winner_id, loser_id, price, trainers);
-            Statement statement = this.connection.createStatement();
-            statement.executeUpdate(sql);
-            this.LAST_SQL_COMMAND = sql;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String sql = String.format("INSERT INTO Fights VALUES (NULL, %s, %s, %s, %s, NOW())",
+                rounds, price, winner_id, loser_id);
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
     }
 
     public void update_trainers(Fight fight) {
-        try {
-            String sql_winner = String.format("UPDATE Trainers SET balance = balance + %s WHERE id = %s",
-                    fight.price, fight.winner.id);
-            String sql_loser= String.format("UPDATE Trainers SET balance = balance - %s WHERE id = %s",
-                    fight.price, fight.loser.id);
-            Statement statement = this.connection.createStatement();
-            statement.executeUpdate(sql_winner);
-            this.LAST_SQL_COMMAND = sql_winner;
+        String sql_winner = String.format("UPDATE Trainers SET balance = balance + %s WHERE trainer_id = %s",
+                fight.price, fight.winner.id);
+        String sql_loser= String.format("UPDATE Trainers SET balance = balance - %s WHERE trainer_id = %s",
+                fight.price, fight.loser.id);
 
-            statement.executeUpdate(sql_loser);
-            this.LAST_SQL_COMMAND = sql_loser;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql_winner).executeUpdate();
+        this.LAST_SQL_COMMAND = sql_winner;
+        em.createNativeQuery(sql_loser).executeUpdate();
+        this.LAST_SQL_COMMAND = sql_loser;
+        tx.commit();
     }
 
     public void insert_attack(Attack attack) {
-        int id = attack.id;
         String name = attack.name;
         String type = attack.type.toString();
         int damage = attack.damage;
         int ap = attack.max_ap;
         int accuracy = attack.accuracy;
 
-        try {
-            String sql = String.format("INSERT INTO Attacks VALUES (%s, '%s', '%s', %s, %s, %s)",
-                    id, name, type, damage, ap, accuracy);
-            Statement statement = this.connection.createStatement();
-            statement.executeUpdate(sql);
-            this.LAST_SQL_COMMAND = sql;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String sql = String.format("INSERT INTO Attacks VALUES ('%s', '%s', %s, %s, %s)",
+                name, type, damage, ap, accuracy);
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
     }
 
     public int get_top_id() throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet set = statement.executeQuery("SELECT id FROM Fights ORDER BY id DESC LIMIT 1");
-        int result = -1;
+        ResultSet set = statement.executeQuery("SELECT fight_id FROM Fights ORDER BY fight_id DESC LIMIT 1");
+        int result = 0;
         while (set.next()) {
             result = set.getInt(1) + 1;
         }
 
         return result;
+    }
+
+    public void set_attacks(Pokemon pokemon) {
+        String sql = String.format("SELECT attack_1, attack_2, attack_3, attack_4 FROM Pokemons WHERE pokemon_id = %s", pokemon.id);
+        Statement statement;
+        ResultSet set;
+        try {
+            statement = this.connection.createStatement();
+            set = statement.executeQuery(sql);
+            if (set.next()) {
+                for (int id = 0; id < 4; ++id) {
+                    pokemon.attacks[id] = em.find(Attack.class, set.getString(id + 1));
+                } 
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
