@@ -19,7 +19,7 @@ public class Database {
     private EntityTransaction tx;
     private Connection connection;
 
-    private String LAST_SQL_COMMAND;
+    private String LAST_SQL_COMMAND = "None";
 
     Database() {
         try {
@@ -198,14 +198,14 @@ public class Database {
         }
         weaknesses = weaknesses.substring(0, weaknesses.length() - 1);
 
-        String a1 = pokemon.attacks[0].name;
-        String a2 = pokemon.attacks[1].name;
-        String a3 = pokemon.attacks[2].name;
-        String a4 = pokemon.attacks[3].name;
+        String[] attacks = new String[4];
+        for (int i = 0; i <= 3; i++) {
+            attacks[i] = pokemon.attacks[i].name;
+        }
 
         String sql = String.format("INSERT INTO Pokemons VALUES " + 
             "(NULL, '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s')",
-            name, lv, types, weaknesses, a1, a2, a3, a4);
+            name, lv, types, weaknesses, attacks[0], attacks[1], attacks[2], attacks[3]);
 
         em.getTransaction();
         tx.begin();
@@ -282,8 +282,7 @@ public class Database {
                 for (int id = 0; id < 4; ++id) {
                     pokemon.attacks[id] = em.find(Attack.class, set.getString(id + 1));
                 } 
-            }
-            
+            }          
         } catch (SQLException e) {
             e.printStackTrace();
         }

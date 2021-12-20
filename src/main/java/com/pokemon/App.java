@@ -5,8 +5,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import com.server.rest.HelloRest;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
 import java.util.logging.Level;
 
+@SpringBootApplication
+@ComponentScan(basePackages = {"com.server.rest"})
 public class App 
 {
     public static void main(String[] args)
@@ -21,6 +29,9 @@ public class App
         database.set_entitymanager(em);
         database.set_entitytransaction(tx);
         database.initialize();
+
+        new HelloRest(em);
+        SpringApplication.run(App.class);
         
         // final Type[] glurakType = {Type.Fire, Type.Earth};
         // final Type[] glurakWeaknesses = {Type.Water};
@@ -64,12 +75,14 @@ public class App
         
         Pokemon glumanda = em.find(Pokemon.class, 1);
         Pokemon groudon = em.find(Pokemon.class, 2);
+        Pokemon glurak = em.find(Pokemon.class, 3);
 
         ash.pokemons[0] = groudon;
         barry.pokemons[0] = glumanda;
 
         database.set_attacks(groudon);
         database.set_attacks(glumanda);
+        database.set_attacks(glurak);
 
         Fight fight = new Fight(ash, barry, 250);
         fight.start();
