@@ -6,6 +6,8 @@ import javax.persistence.*;
 @Table(name = "Fights")
 public class Fight {
     private static int fights = 0;
+
+    static Database database;
     
     @Id
     @Column(name = "fight_id")
@@ -15,56 +17,62 @@ public class Fight {
     public int rounds = 0;
 
     @Transient
-    public Trainer[] trainers = new Trainer[2];
-
-    @Transient
-    public Trainer winner;
-
-    @Transient
-    public Trainer loser;
-
-    @Transient
     public boolean running = true;
 
     @Transient
-    public Trainer attacker;
+    public User[] users = new User[2];
 
     @Transient
-    public Trainer defender;
+    public User winner;
+
+    @Transient
+    public User loser;
+
+    @Transient
+    public User attacker;
+
+    @Transient
+    public User defender;
+
+    @Transient
+    private int attacker_pokemon_id = 0;
+
+    @Transient
+    private int defender_pokemon_id = 0;
 
     Fight() {}
 
-    Fight(Trainer trainer1, Trainer trainer2) {
-        this.trainers[0] = trainer1;
-        this.trainers[1] = trainer2;
+    Fight(User user1, User user2) {
+        this.users[0] = user1;
+        this.users[1] = user2;
         this.id++;
         starter();
         fights++;
     }
 
-    Fight(Trainer trainer1, Trainer trainer2, int price) {
-        this.trainers[0] = trainer1;
-        this.trainers[1] = trainer2;
-        this.price = price;
+    Fight(User user1, User user2, int price) {
+        this.users[0] = user1;
+        this.users[1] = user2;
         this.id++;
+        this.price = price;
         starter();
-        reset_current_ap(trainer1);
-        reset_current_ap(trainer2);
+        reset_current_ap(user1);
+        reset_current_ap(user2);
         fights++;
     }
 
     private void starter() {
-        if (this.trainers[0].pokemons[0].speed >= this.trainers[1].pokemons[0].speed) {
-            this.attacker = this.trainers[0];
-            this.defender = this.trainers[1];
+        if (this.users[0].pokemons.get(attacker_pokemon_id).speed >= this.users[1].pokemons.get(defender_pokemon_id).speed) {
+            this.attacker = this.users[0];
+            this.defender = this.users[1];
         } else {
-            this.attacker = this.trainers[1];
-            this.defender = this.trainers[0];
+            this.attacker = this.users[1];
+            this.defender = this.users[0];
         }
     }
 
-    private void reset_current_ap(Trainer trainer) {
-        for (Pokemon pokemon : trainer.pokemons) {
+    private void reset_current_ap(User user) {
+        for (Pokemon pokemon : user.pokemons) {
             if (pokemon != null) {
                 for (Attack attack : pokemon.attacks) {
                     attack.current_ap = attack.max_ap;
@@ -75,25 +83,29 @@ public class Fight {
 
     private void show_status(Pokemon pokemon) {
         System.out.println("---------------------------------");
-        System.out.println(String.format("-- %s(Lv. %s) HP: %s --", pokemon.name, pokemon.lv, pokemon.current_hp));
+        System.out.println(String.format("-- %s(Lv. %s) HP: %s", pokemon.name, pokemon.lv, pokemon.current_hp));
         System.out.println("---------------------------------");
     }
 
     private void show_attacks(Pokemon pokemon) {
         System.out.println(String.format("-- %s %s/%s(1) --- %s %s/%s(2) --", 
-            pokemon.attacks[0].name, pokemon.attacks[0].current_ap, pokemon.attacks[0].max_ap,
-            pokemon.attacks[1].name, pokemon.attacks[1].current_ap, pokemon.attacks[1].max_ap));
+            pokemon.attacks.get(0).name, pokemon.attacks.get(0).current_ap, pokemon.attacks.get(0).max_ap,
+            pokemon.attacks.get(1).name, pokemon.attacks.get(1).current_ap, pokemon.attacks.get(1).max_ap));
     
         System.out.println(String.format("-- %s %s/%s(3) --- %s %s/%s(4) --", 
-            pokemon.attacks[2].name, pokemon.attacks[2].current_ap, pokemon.attacks[2].max_ap,
-            pokemon.attacks[3].name, pokemon.attacks[3].current_ap, pokemon.attacks[3].max_ap));
+            pokemon.attacks.get(2).name, pokemon.attacks.get(2).current_ap, pokemon.attacks.get(2).max_ap,
+            pokemon.attacks.get(3).name, pokemon.attacks.get(3).current_ap, pokemon.attacks.get(3).max_ap));
         System.out.println("---------------------------------");
     }
 
     private void swap_attackers() {
-        Trainer tmp = this.attacker;
+        User tmp = this.attacker;
         this.attacker = this.defender;
         this.defender = tmp;
+
+        int tmp_id = attacker_pokemon_id;
+        attacker_pokemon_id = defender_pokemon_id;
+        defender_pokemon_id = tmp_id;
     }
 
     private int get_input() {
@@ -111,8 +123,8 @@ public class Fight {
     }
 
     public void start() {
-        for (Trainer trainer : trainers) {
-            for (Pokemon pokemon : trainer.pokemons) {
+        for (User user : users) {
+            for (Pokemon pokemon : user.pokemons) {
                 if (pokemon != null) {
                     pokemon.current_hp = pokemon.hp;
                 }
@@ -120,35 +132,43 @@ public class Fight {
         }
 
         while (true) {
-            if (!this.running) {
-                break;
-            }
+            for (User user : users) {
+                if (!attacker.pokemons.get(attacker_pokemon_id).alive && attacker_pokemon_id < attacker.pokemons.size() - 1) {
+                    if (attacker.pokemons.get(attacker_pokemon_id + 1) != null) {
+                        attacker_pokemon_id++;
+                    }
+                }
 
-            System.out.println(String.format("It's %s turn! Choose an attack:", attacker.name));
-            show_status(this.attacker.pokemons[0]);
-            show_attacks(this.attacker.pokemons[0]);
+                if (!defender.pokemons.get(defender_pokemon_id).alive && defender_pokemon_id < defender.pokemons.size() - 1) {
+                    if (defender.pokemons.get(defender_pokemon_id + 1) != null) {
+                        defender_pokemon_id++;
+                    }
+                }
 
-            int choice = get_input();
-            Attack attack = this.attacker.pokemons[0].attacks[choice - 1];
-            System.out.println(String.format("User choose attack %s", attack.name));
-
-            // System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
-            this.attacker.pokemons[0].attack(attack, this.defender.pokemons[0]);
-            // System.out.println(String.format("%s hp: %s", this.defender.pokemons[0].name, this.defender.pokemons[0].hp));
-            
-            swap_attackers();
-            this.rounds++;
-
-            for (Trainer trainer : trainers) {
-                if (trainer.check_if_done()) {
+                if (user.check_if_done()) {
                     this.running = false;
-                    this.loser = trainer;
+                    this.loser = user;
                     this.winner = this.defender;
-                    // this.winner .update_balance(true, 500);
-                    System.out.println(String.format("Trainer %s lost", trainer.name));
+                    database.update_users_balance(this.winner, this.price);
+                    database.update_users_balance(this.loser, -this.price);
+                    database.insert_fight(this);
+                    System.out.println(String.format("User %s lost", user.username));
                 }
             }
-                
+
+            if (!this.running) break;
+
+            System.out.println(String.format("It's %s turn! Choose an attack:", attacker.username));
+            show_status(this.attacker.pokemons.get(attacker_pokemon_id));
+            show_attacks(this.attacker.pokemons.get(attacker_pokemon_id));
+
+            int choice = get_input();
+            Attack attack = this.attacker.pokemons.get(attacker_pokemon_id).attacks.get(choice - 1);
+            System.out.println(String.format("User choose attack %s", attack.name));
+
+            this.attacker.pokemons.get(attacker_pokemon_id).attack(attack, this.attacker.pokemons.get(attacker_pokemon_id));   
+            swap_attackers();
+            this.rounds++;
         }
     }
 }
