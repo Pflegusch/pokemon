@@ -1,5 +1,7 @@
 package com.pokemon;
 
 public enum Type {
-    Normal, Fire, Water, Earth, Ground, Electric;
+    Bug, Dark, Dragon, Electric, Fairy, Fighting,
+    Fire, Flying, Ghost, Grass, Ground, Ice, Normal,
+    Poison, Psychic, Rock, Steel, Water
 }
