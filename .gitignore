@@ -5,3 +5,4 @@ target/
 src/main/java/com/pokemon/*.class
 .vscode/
 lib/
+src/frontend/
