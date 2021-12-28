@@ -1,0 +1,14 @@
+INSERT INTO Attacks VALUES ('Charge', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Charge Beam', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Discharge', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Magnet Rise', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Shock Wave', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Spark', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Thunder', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Thunder Fang', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Thunder Wave', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Thunderbolt', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('ThunderPunch', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('ThunderShock', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Volt Tackle', 'Electric', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Zap Cannon', 'Electric', 1, 1, 1, 0);

@@ -1,0 +1,14 @@
+INSERT INTO Attacks VALUES ('Astonish', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Confuse Ray', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Destiny Bond', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Grudge', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Lick', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Night Shade', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Nightmare', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Ominous Wind', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Shadow Ball', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Shadow Claw', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Shadow Force', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Shadow Punch', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Shadow Sneak', 'Ghost', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Spite', 'Ghost', 1, 1, 1, 0);

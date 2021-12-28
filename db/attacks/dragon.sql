@@ -1,0 +1,11 @@
+INSERT INTO Attacks VALUES ('Draco Meteor', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Dragon Claw', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Dragon Dance', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Dragon Pulse', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Dragon Rage', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Dragon Rush', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('DragonBreath', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Outrage', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Roar of Time', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Spacial Rend', 'Dragon', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Twister', 'Dragon', 1, 1, 1, 0);

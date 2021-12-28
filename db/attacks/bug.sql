@@ -1,0 +1,17 @@
+INSERT INTO Attacks VALUES ('Attack Order', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Bug Bite', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Bug Buzz', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Defend Order', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Fury Cutter', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Heal Order', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Leech Life', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Megahorn', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Pin Missile', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Signal Beam', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Silver Wind', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Spider Web', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('String Shot', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Tail Glow', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Twineedle', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('U-Turn', 'Bug', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('X-Scissor', 'Bug', 1, 1, 1, 0);

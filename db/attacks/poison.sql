@@ -1,0 +1,16 @@
+INSERT INTO Attacks VALUES ('Acid', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Acid Armor', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Cross Poison', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Gastro Acid', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Gunk Shot', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Poison Fang', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Poison Gas', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Poison Jab', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Poison Sting', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Poison Tail', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('PoisonPowder', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Sludge', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Sludge Bomb', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Smog', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Toxic', 'Poison', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Toxic Spikes', 'Poison', 1, 1, 1, 0);

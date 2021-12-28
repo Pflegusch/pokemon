@@ -1,0 +1,15 @@
+INSERT INTO Attacks VALUES ('Aurora Beam', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Avalanche', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Blizzard', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Hail', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Haze', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Ice Ball', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Ice Beam', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Ice Fang', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Ice Punch', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Ice Shard', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Icicle Spear', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Icy Wind', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Mist', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Powder Snow', 'Ice', 1, 1, 1, 0);
+INSERT INTO Attacks VALUES ('Sheer Cold', 'Ice', 1, 1, 1, 0);
