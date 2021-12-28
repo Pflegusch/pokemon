@@ -17,7 +17,7 @@ public class Database {
 
     private EntityManager em;
     private EntityTransaction tx;
-    private Connection connection;
+    public Connection connection;
 
     private String LAST_SQL_COMMAND = "None";
 
@@ -68,25 +68,14 @@ public class Database {
     }
 
     public void initialize() {
-        if (!table_exist("Trainers")) initialize_trainers();
         if (!table_exist("Attacks")) initialize_attacks();
         if (!table_exist("Pokemons")) initialize_pokemons();
         if (!table_exist("Fights")) initialize_fights();
         
     }
 
-    private void initialize_trainers() {
-        String sql = "CREATE TABLE Trainers" +
-            "(trainer_id INTEGER AUTO_INCREMENT, " +
-            "name VARCHAR(255) not null, " +
-            "balance INTEGER, " +
-            "PRIMARY KEY ( trainer_id ))";
-
-        em.getTransaction();
-        tx.begin();
-        em.createNativeQuery(sql).executeUpdate();
-        tx.commit();
-        this.LAST_SQL_COMMAND = sql;
+    private void initialize_users() {
+        // TODO?
     }
 
     private void initialize_pokemons() {
@@ -102,10 +91,12 @@ public class Database {
             "attack_2 VARCHAR(255) not null, " + 
             "attack_3 VARCHAR(255) not null, " + 
             "attack_4 VARCHAR(255) not null, " + 
+            "owner VARCHAR(255) default null, " +
             "FOREIGN KEY (attack_1) REFERENCES Attacks(name), " +
             "FOREIGN KEY (attack_2) REFERENCES Attacks(name), " +
             "FOREIGN KEY (attack_3) REFERENCES Attacks(name), " +
             "FOREIGN KEY (attack_4) REFERENCES Attacks(name), " +
+            "FOREIGN KEY (owner) REFERENCES Users(username), " +
             "PRIMARY KEY ( pokemon_id ))";
 
         em.getTransaction();
@@ -124,8 +115,8 @@ public class Database {
             "loser INTEGER not null, " +
             "created_at DATETIME, " +
             "PRIMARY KEY ( fight_id ), " +
-            "FOREIGN KEY (winner) REFERENCES Trainers(trainer_id), " +
-            "FOREIGN KEY (loser) REFERENCES Trainers(trainer_id))";
+            "FOREIGN KEY (winner) REFERENCES Users(username), " +
+            "FOREIGN KEY (loser) REFERENCES Users(username))";
 
         em.getTransaction();
         tx.begin();
@@ -171,17 +162,6 @@ public class Database {
         return tExists;
     }
 
-    public void insert_trainer(Trainer trainer) {
-        String sql = String.format("INSERT INTO Trainers VALUES (NULL, '%s', %s)",
-            trainer.name, trainer.balance);
-
-        em.getTransaction();
-        tx.begin();
-        em.createNativeQuery(sql).executeUpdate();
-        tx.commit();
-        this.LAST_SQL_COMMAND = sql;
-    }
-
     public void insert_pokemon(Pokemon pokemon) {
         int lv = pokemon.lv;
         String name = pokemon.name;
@@ -200,11 +180,11 @@ public class Database {
 
         String[] attacks = new String[4];
         for (int i = 0; i <= 3; i++) {
-            attacks[i] = pokemon.attacks[i].name;
+            attacks[i] = pokemon.attacks.get(i).name;
         }
 
         String sql = String.format("INSERT INTO Pokemons VALUES " + 
-            "(NULL, '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s')",
+            "(NULL, '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s', NULL)",
             name, lv, types, weaknesses, attacks[0], attacks[1], attacks[2], attacks[3]);
 
         em.getTransaction();
@@ -216,32 +196,17 @@ public class Database {
 
     public void insert_fight(Fight fight) {
         int rounds = fight.rounds;    
-        int winner_id = fight.winner.id;
-        int loser_id = fight.loser.id;
+        String winner = fight.winner.username;
+        String loser = fight.loser.username;
         int price = fight.price;
 
-        String sql = String.format("INSERT INTO Fights VALUES (NULL, %s, %s, %s, %s, NOW())",
-                rounds, price, winner_id, loser_id);
+        String sql = String.format("INSERT INTO Fights VALUES (NULL, %s, %s, '%s', '%s', NOW())",
+                rounds, price, winner, loser);
         em.getTransaction();
         tx.begin();
         em.createNativeQuery(sql).executeUpdate();
         tx.commit();
         this.LAST_SQL_COMMAND = sql;
-    }
-
-    public void update_trainers(Fight fight) {
-        String sql_winner = String.format("UPDATE Trainers SET balance = balance + %s WHERE trainer_id = %s",
-                fight.price, fight.winner.id);
-        String sql_loser= String.format("UPDATE Trainers SET balance = balance - %s WHERE trainer_id = %s",
-                fight.price, fight.loser.id);
-
-        em.getTransaction();
-        tx.begin();
-        em.createNativeQuery(sql_winner).executeUpdate();
-        this.LAST_SQL_COMMAND = sql_winner;
-        em.createNativeQuery(sql_loser).executeUpdate();
-        this.LAST_SQL_COMMAND = sql_loser;
-        tx.commit();
     }
 
     public void insert_attack(Attack attack) {
@@ -280,11 +245,20 @@ public class Database {
             set = statement.executeQuery(sql);
             if (set.next()) {
                 for (int id = 0; id < 4; ++id) {
-                    pokemon.attacks[id] = em.find(Attack.class, set.getString(id + 1));
+                    pokemon.attacks.set(id, em.find(Attack.class, set.getString(id + 1)));
                 } 
             }          
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void update_users_balance(User user, int balance) {
+        String sql = String.format("UPDATE Users SET balance = balance + %s where username = '%s'", balance, user.username);
+        em.getTransaction();
+        tx.begin();
+        em.createNativeQuery(sql).executeUpdate();
+        tx.commit();
+        this.LAST_SQL_COMMAND = sql;
     }
 }
