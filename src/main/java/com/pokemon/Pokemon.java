@@ -1,12 +1,23 @@
 package com.pokemon;
 
 import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
+
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Connection;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "Pokemons")
 public class Pokemon {
     private static int pokemons = 0;
+
+    static EntityManager entityManager;
+    static Connection connection;
     
     @Id
     @Column(name = "pokemon_id")
@@ -17,9 +28,10 @@ public class Pokemon {
     public int speed;
 
     public String name;
+    public String owner;
     
     @Transient
-    public Attack[] attacks = new Attack[4];
+    public List<Attack> attacks = new ArrayList<Attack>();
 
     @Transient
     public Type[] type = new Type[2];
@@ -44,7 +56,7 @@ public class Pokemon {
         pokemons++;
     }
 
-    Pokemon(int hp, int lv, int speed, String name, Attack[] attacks, Type[] type, Type[] weaknesses) {
+    Pokemon(int hp, int lv, int speed, String name, List<Attack> attacks, Type[] type, Type[] weaknesses) {
         this.hp = hp;
         this.current_hp = hp;
         this.lv = lv;
@@ -56,13 +68,37 @@ public class Pokemon {
         pokemons++;
     }
 
+    public void set_attacks() {
+        final int number_of_attacks = 4;
+        Statement statement;
+        ResultSet set;
+
+        for (int attack_id = 1; attack_id <= number_of_attacks; attack_id++) {
+            String sql = String.format("select Attacks.name from Attacks, Pokemons where Attacks.name = Pokemons.attack_%s and Pokemons.name = '%s';"
+                        , attack_id, this.name);      
+            try {
+                statement = connection.createStatement();
+                set = statement.executeQuery(sql);
+                while(set.next()) {
+                    Attack attack = entityManager.find(Attack.class, set.getString("name"));
+                    if (attack != null) {
+                        entityManager.detach(attack);
+                        this.attacks.add(attack);
+                    }       
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void attack(Attack attack, Pokemon other) {
         Random random = new Random();
         int accuracy_range = random.nextInt(100);
         if (100 - attack.accuracy < accuracy_range) {
             if ((other.current_hp - attack.damage) <= 0) {
                 other.current_hp = 0;
-                this.alive = false;
+                other.alive = false;
             } else {
                  other.current_hp -= attack.damage;
             } 
