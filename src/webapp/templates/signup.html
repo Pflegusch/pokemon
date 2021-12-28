@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Index</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/App.css') }}">
+</head>
+
+<body>
+  <h1 style="color: rgb(102, 11, 138)">Example Pokemon Game</h1>
+  <p>Signup for the Pokemon Game</p>
+
+  <form action="/signup" method="POST">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" class="form-control" id="username" name="username" placeholder="Select a username">
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Create a password">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sign up</button>
+
+  </form>
+</body>
+</html>

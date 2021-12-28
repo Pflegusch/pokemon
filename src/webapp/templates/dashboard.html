@@ -11,9 +11,16 @@
 </head>
 
 <body>
-  <h1 style="color: rgb(102, 11, 138)">Example Pokemon Game</h1>
-  <p>Example Pokemon Game running in Java/Python</p>
-
-  EHRE!
+  <h1 style="color: rgb(207, 14, 14)">Dashboard</h1>
+  <p>Your Name: {{ username }}</p>
+  <p>Your Pokemons:</p>
+  <ul>
+      {% for pokemon in pokemons %}
+      <li>{{ pokemon }}</li>
+      {% endfor %}
+  </ul>
+  <a href="/logout">
+    <button>Logout</button>
+  </a>
 </body>
 </html>
