@@ -67,8 +67,11 @@ public class App
         }
 
         Fight fight = new Fight(pflegusch, alice, 300);
-        fight.start();
+        // fight.start();
 
-
+        Shop shop = new Shop();
+        Shop.entityManager = em;
+        Shop.entityTransaction = tx;
+        shop.fill_shop();
     }
 }
