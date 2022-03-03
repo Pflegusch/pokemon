@@ -29,7 +29,7 @@ public class HelloRest {
 
 	@GetMapping("/greeting")
 	public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return (String.format(template, name);
+		return (String.format(template, name));
 	}
 
 	@GetMapping("/pokemon")
