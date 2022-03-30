@@ -1,2 +1,3 @@
 src/webapp/static/css/* linguist-vendored
 src/webapp/static/scss/* linguist-vendored
+src/webapp/templates/* linguist-vendored
